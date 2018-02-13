@@ -3,6 +3,10 @@
   align-content: center
 }
 
+body {
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100px' width='100px' opacity='0.25'><text x='0' y='50' font-size='40'>🐎</text></svg>");
+}
+
 
 .chatWindow {
   height: 20em;
@@ -10,8 +14,9 @@
   font-size:12px;
   width: 50%;
   margin:auto auto;
-  border:1px solid red;
+  border:1px solid brown;
   overflow-y: scroll;
+  background-color:white;
 }
 
 .chatWindow .message { 
@@ -52,4 +57,16 @@
 
 .message .text {
   margin-top:0;
+}
+
+.textMessageBox {
+  /* border:1px solid red; */
+}
+
+.textMessageBox input {
+  height:4em;
+  width:50%;
+  font-family: sans-serif;
+  font-size:12px;
+  border-left:1px solid brown;
 }

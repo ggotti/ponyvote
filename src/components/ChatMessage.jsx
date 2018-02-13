@@ -16,6 +16,9 @@ export default class ChatMessage extends Component {
     }
 
     render(){
-        return <button onClick={e => this.handleOnAdd(e)}>SUPER PONY</button>
+        return <div className="textMessageBox">
+            <input type="text"></input>
+            {/* <button onClick={e => this.handleOnAdd(e)}>Sned PONY</button> */}
+            </div>
     }
 }
