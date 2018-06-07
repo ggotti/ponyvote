@@ -1,14 +1,23 @@
+```
+______                   _   _       _       
+| ___ \                 | | | |     | |      
+| |_/ /__  _ __  _   _  | | | | ___ | |_ ___ 
+|  __/ _ \| '_ \| | | | | | | |/ _ \| __/ _ \
+| | | (_) | | | | |_| | \ \_/ / (_) | ||  __/
+\_|  \___/|_| |_|\__, |  \___/ \___/ \__\___|
+                  __/ |                      
+                 |___/                       
+
+```
+Example project demonstrating how to use AWS AppSync & AWS Amplify.
+
+Note: To ensure portability, the [AWS Mobile CLI](https://github.com/aws/awsmobile-cli) supporting code has been removed,
+and replaced with a manually edited `aws-exports.js` file. When using AWS Amplify correctly, additional files will be
+created to track resources provisioned in your environment. 
 
 # Pre-requisites
 Install AWS Mobile CLI
 ```npm install -g awsmobile-cli```
-
-# Install
-Does not support the profile settings within the CLI by default:
-`awsmobile configure aws`
-
-`awsmobile init` initialise backend resources.
-
 
 ## Install Steps
 1. Execute the creation command:
@@ -19,6 +28,10 @@ aws cloudformation create-stack --stack-name ponyvote --template-body file://./p
 ```
 aws cloudformation describe-stacks --stack-name ponyvote
 ```
+
+3. Copy values into `src/aws-exports.js`
+
+4. Run `yarn install`
 
 ## Update Stack
 If you need to modify the stack, execute the following:
