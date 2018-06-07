@@ -7,66 +7,41 @@ body {
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100px' width='100px' opacity='0.25'><text x='0' y='50' font-size='40'>🐎</text></svg>");
 }
 
+.ballot h1 {
+  color: brown;
+}
 
-.chatWindow {
-  height: 20em;
-  text-align:left;
-  font-size:12px;
-  width: 50%;
-  margin:auto auto;
+.voteOptions {
+  /* display: inline-flex */
+  display:inline-grid;
+  grid-template-columns: 10em 10em 10em 10em;
+  grid-column-gap:1em;
+}
+
+.vote {
+  background: white;
   border:1px solid brown;
-  overflow-y: scroll;
-  background-color:white;
+  cursor: pointer;
+  /* height:10em;
+  width:10em;
+  margin:2em; */
 }
 
-.chatWindow .message { 
-  padding-right:1em;
-  padding-left:1em;
-  margin-bottom:5em;
-  margin-top:1em;
-  width:80%;
-  clear:both;
+.loader {
+  width: 100px;
+  height: 100px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='100px' width='100px' opacity='1'><text x='0' y='50' font-size='40'>🏇</text></svg>");
+  -webkit-animation: spin 1s infinite linear;
+
+  display: table;
+  margin: 0 auto;
 }
 
-.message .iconWrapper {
-  float:left;
-}
-
-.message .textWrapper {
-  float:left;
-  padding-top:0.5em;
-  margin-left:1em;
-}
-
-.message .icon {
-  width: 2em;
-  height: 2em;
-  border-radius: 50%;
-  font-size: 20px;
-  color: #fff;
-  line-height: 2em;
-  text-align: center;
-  background: red
-}
-
-.message .user {
-  font-weight: bold;
-  padding:0;
-  margin:0;
-}
-
-.message .text {
-  margin-top:0;
-}
-
-.textMessageBox {
-  /* border:1px solid red; */
-}
-
-.textMessageBox input {
-  height:4em;
-  width:50%;
-  font-family: sans-serif;
-  font-size:12px;
-  border-left:1px solid brown;
+@keyframes spin {
+  from {
+    transform:rotate(0deg);
+  }
+  to {
+    transform:rotate(360deg);
+  }
 }

@@ -1,0 +1,159 @@
+---
+Description: PonyVote. For when your team can't decide which Pony Emoji you need to use
+Parameters:
+  DemoName:
+    Type: String
+    Description: "Name of the API, for generate names for resources"
+    Default: pony
+Resources:
+  VotesTable:
+    Type: "AWS::DynamoDB::Table"
+    Description: "Data store for AWS AppSync Notes Type"
+    Properties:
+      TableName: !Ref DemoName
+      AttributeDefinitions:
+        - AttributeName: "candidateId"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "candidateId"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  DynamoDBRole:
+     Type: AWS::IAM::Role
+     Properties:
+       RoleName: !Sub ${DemoName}-appsync-dynamodb-role
+       ManagedPolicyArns:
+         - Ref: AppSyncDynamoDBPolicy
+       AssumeRolePolicyDocument:
+         Version: 2012-10-17
+         Statement:
+           - Effect: Allow
+             Action:
+               - sts:AssumeRole
+             Principal:
+               Service:
+                 - appsync.amazonaws.com
+     DependsOn:
+       - AppSyncDynamoDBPolicy
+  AppSyncDynamoDBPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Managed policy to allow AWS AppSync to access the tables created by this template.
+      Path: /appsync/
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:DeleteItem
+              - dynamodb:UpdateItem
+              - dynamodb:Query
+              - dynamodb:Scan
+              - dynamodb:BatchGetItem
+              - dynamodb:BatchWriteItem
+            Resource: !Join [ "", [ !GetAtt VotesTable.Arn, "*" ] ]
+  AppSyncApi:
+    Type: "AWS::AppSync::GraphQLApi"
+    Description: "The GraphQL API for the Notes App"
+    Properties:
+      AuthenticationType: "API_KEY"
+      Name: !Ref DemoName
+
+  AppSyncSchema:
+    Type: "AWS::AppSync::GraphQLSchema"
+    Properties:
+      ApiId: !GetAtt AppSyncApi.ApiId
+      Definition: |
+       type Candidate {
+       	candidateId: ID!
+       	votes: Int!
+       }
+
+       type Mutation {
+       	vote(candidateId: ID!): Candidate
+       }
+
+       type Query {
+       	getCandidates: [Candidate]
+       }
+
+       type Subscription {
+       	onUpdateCandidate(candidateId: ID, votes: Int): Candidate
+       		@aws_subscribe(mutations: ["vote"])
+       }
+
+       schema {
+       	query: Query
+       	mutation: Mutation
+       	subscription: Subscription
+       }
+  AppSyncVoteTableDataSource:
+    Type: "AWS::AppSync::DataSource"
+    Properties:
+      ApiId: !GetAtt AppSyncApi.ApiId
+      Name: !Ref DemoName
+      Description: "The Notes Table AppSync Data Source"
+      Type: AMAZON_DYNAMODB
+      ServiceRoleArn: !GetAtt DynamoDBRole.Arn
+      DynamoDBConfig:
+        TableName: !Ref VotesTable
+        AwsRegion: !Sub ${AWS::Region}
+  AppSyncCandidateMutation:
+     Type: "AWS::AppSync::Resolver"
+     DependsOn: AppSyncSchema
+     Properties:
+       ApiId: !GetAtt AppSyncApi.ApiId
+       TypeName: Mutation
+       FieldName: vote
+       DataSourceName: !GetAtt AppSyncVoteTableDataSource.Name
+       RequestMappingTemplate: |
+        #set($allowedCandidated = ['carnival','racing','close','unicorn'] )
+        #set($isAllowedCandidate= $allowedCandidated.contains($ctx.args.candidateId))
+        $util.validate(${isAllowedCandidate}, "Candidated iD is not allowed")
+
+        {
+            "version" : "2017-02-28",
+            "operation" : "UpdateItem",
+            "key":{
+            	"candidateId":{ "S": "${ctx.args.candidateId}" }
+            },
+            "update" : {
+                "expression" : "ADD votes :num",
+                "expressionValues" : {
+                    ":num" : { "N" : 1 }
+                }
+            }
+        }
+       ResponseMappingTemplate: |
+        $util.toJson($ctx.result)
+  AppSyncGetCandidateList:
+     Type: "AWS::AppSync::Resolver"
+     DependsOn: AppSyncSchema
+     Properties:
+       ApiId: !GetAtt AppSyncApi.ApiId
+       TypeName: Query
+       FieldName: getCandidates
+       DataSourceName: !GetAtt AppSyncVoteTableDataSource.Name
+       RequestMappingTemplate: |
+        {
+            "version" : "2017-02-28",
+            "operation" : "Scan",
+        }
+       ResponseMappingTemplate: |
+        $util.toJson($ctx.result.items)
+  ApiKey:
+    Type: "AWS::AppSync::ApiKey"
+    Properties:
+      ApiId: !GetAtt AppSyncApi.ApiId
+      Expires: 1546261200
+Outputs:
+  ApiKey:
+    Description: API Key
+    Value: !GetAtt ApiKey.ApiKey
+  URL:
+    Description: HTTP URL
+    Value: !GetAtt AppSyncApi.GraphQLUrl
