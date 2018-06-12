@@ -1,4 +1,6 @@
 ```
+🐎🐴🎠🦄🐎🐴🎠🦄🐎🐴🎠🦄🐎🐴🎠🦄🐎🐴🎠🦄
+🐎🐴🎠🦄🐎🐴🎠🦄🐎🐴🎠🦄🐎🐴🎠🦄🐎🐴🎠🦄
 ______                   _   _       _       
 | ___ \                 | | | |     | |      
 | |_/ /__  _ __  _   _  | | | | ___ | |_ ___ 
@@ -8,15 +10,34 @@ ______                   _   _       _
                   __/ |                      
                  |___/                       
 
+🐎🐴🎠🦄🐎🐴🎠🦄🐎🐴🎠🦄🐎🐴🎠🦄🐎🐴🎠🦄
+🐎🐴🎠🦄🐎🐴🎠🦄🐎🐴🎠🦄🐎🐴🎠🦄🐎🐴🎠🦄
+
 ```
-Example project demonstrating how to use AWS AppSync & AWS Amplify.
+Example project demonstrating how to use [AWS AppSync](https://aws.amazon.com/appsync/) & [AWS Amplify](https://aws.github.io/aws-amplify/). The project is built with React, with a goal of simplicity. The project is structured as follows:
+```
+.
+├── src
+│   ├── App.css <- All the styles. Don't do this at home.
+│   ├── App.js <- Basic appp structure
+│   ├── aws-exports.js <- Settings that you will need to modify are located here.
+│   ├── components <- React Components
+│   │   ├── Candidates.connected.jsx <- This is where the magic happens. Connect AWS Amplify to React.
+│   │   ├── Candidates.jsx <- Display logic for list of Candidates.
+│   │   ├── Loader.jsx <- Magical spinning horse.
+│   │   └── Vote.jsx <- Individual vote.
+│   ├── index.css <- Global styles.
+│   ├── index.js <- React Entrypoint.
+│   └── registerServiceWorker.js <- Servie worker for cash support.
+```
 
 Note: To ensure portability, the [AWS Mobile CLI](https://github.com/aws/awsmobile-cli) supporting code has been removed,
 and replaced with a manually edited `aws-exports.js` file. When using AWS Amplify correctly, additional files will be
 created to track resources provisioned in your environment. 
 
 # Pre-requisites
-Install AWS Mobile CLI
+1. Node 8.x+ installed and available.
+2. Install AWS Mobile CLI
 ```npm install -g awsmobile-cli```
 
 ## Install Steps
