@@ -7,13 +7,20 @@ export default class Vote extends Component {
     this.state = props
   }
 
+  /**
+   * I've used this function to copy values from the supplied props into the state object
+   * due to the lack of optimisticResponse in AWS Amplify. See <a href="https://github.com/aws/aws-amplify/issues/949">
+   *   here</a> for details.
+   * @param props
+   * @param state
+   * @return {*}
+   */
   static getDerivedStateFromProps(props, state) {
-    if (props != null &&
-      Math.max(props.votes, state.votes) > state.votes) {
-      return props
-    } else {
+    const isStateVotesHigherThanPropVotes = Math.max(props.votes, state.votes) <= state.votes
+    if (props == null || isStateVotesHigherThanPropVotes) {
       return null
     }
+    return props
   }
 
   vote() {

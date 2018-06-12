@@ -2,7 +2,7 @@ import Amplify from 'aws-amplify'
 import React, {Component} from 'react'
 
 import aws_exports from './aws-exports'
-import BallotHoC from './components/Ballot'
+import CandidatesConnected from './components/Candidates.connected'
 
 import './App.css'
 
@@ -15,7 +15,7 @@ class App extends Component {
       <div className="App">
         <div className="ballot">
           <h1>What's your favourite kind of Pony?</h1>
-          <BallotHoC />
+          <CandidatesConnected />
         </div>
       </div>
     )
